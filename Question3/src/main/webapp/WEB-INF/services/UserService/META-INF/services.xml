@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<serviceGroup>
+	<service name="UserService">
+		<parameter name="ServiceClass">fr.polytech.messager.server.axis2.services.AxisUserService</parameter>
+		<operation name="returnTrue">
+			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+		</operation>
+	</service>
+</serviceGroup>

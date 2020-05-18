@@ -29,47 +29,49 @@ public abstract class HibernateDao<Id extends Serializable, T extends Identifiab
             tableName = tableAnnotation.name();
         }
         className = clazz.getSimpleName();
+        getSession();
     }
 
     public boolean isEmpty() {
         System.out.println("[DEBUG] isEmpty " + tableName);
-        return ((BigInteger) SESSION.createSQLQuery("SELECT EXISTS (SELECT NULL FROM " + tableName + ")").uniqueResult()).intValue() == 0;
+        return ((BigInteger) getSession().createSQLQuery("SELECT EXISTS (SELECT NULL FROM " + tableName + ")").uniqueResult()).intValue() == 0;
     }
 
     public void save(T toSave) {
-        Transaction transaction = SESSION.beginTransaction();
-        SESSION.saveOrUpdate(toSave);
+        Transaction transaction = getSession().beginTransaction();
+        getSession().save(toSave);
         transaction.commit();
     }
 
     public Optional<T> getById(Id id) {
-        return Optional.ofNullable(SESSION.get(clazz, id));
+        return Optional.ofNullable(getSession().get(clazz, id));
     }
 
     public void remove(T toRemove) {
-        Transaction transaction = SESSION.beginTransaction();
-        SESSION.delete(toRemove);
+        Transaction transaction = getSession().beginTransaction();
+        getSession().delete(toRemove);
         transaction.commit();
     }
 
-    public Collection<T> getAll() {
-        return SESSION.createQuery("FROM " + className, clazz).list();
+    public List<T> getAll() {
+        return getSession().createQuery("FROM " + className, clazz).list();
     }
 
     protected Page<T> getPage(String hqlQuery, int pageSize, int pageNumber) {
-        final Query<T> query = SESSION.createQuery(hqlQuery, clazz);
+        final Query<T> query = getSession().createQuery(hqlQuery, clazz);
         query.setMaxResults(pageSize);
         query.setFirstResult((pageNumber - 1) * pageSize);
         final List<T> res = query.list();
-        Long totalResults = (Long) SESSION.createQuery("select count (t.id) from " + className + " t").uniqueResult();
+        Long totalResults = (Long) getSession().createQuery("select count (t.id) from " + className + " t").uniqueResult();
         int numberOfPages = Double.valueOf(Math.ceil(((double)totalResults / (double) pageSize))).intValue();
         return new PageImpl<>(res, pageSize, pageNumber, totalResults, numberOfPages);
     }
 
-    public void initSession() {
+    public Session getSession() {
         if (SESSION == null || ! SESSION.isOpen()) {
             SESSION = new Configuration().configure().buildSessionFactory().openSession();
         }
+        return SESSION;
     }
 
     protected Optional<T> getOne(Query<T> query) {

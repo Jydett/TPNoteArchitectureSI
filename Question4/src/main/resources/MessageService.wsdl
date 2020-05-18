@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ax23="http://ws.apache.org/namespaces/axis2/enum" xmlns:ns="http://services.axis2.server.messager.polytech.fr" xmlns:ax22="http://time.java/xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ax21="http://beans.messager.polytech.fr/xsd" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" targetNamespace="http://services.axis2.server.messager.polytech.fr">
+    <wsdl:documentation>MessageService</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://ws.apache.org/namespaces/axis2/enum">
+            <xs:simpleType name="java.time.DayOfWeek">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="MONDAY"/>
+                    <xs:enumeration value="TUESDAY"/>
+                    <xs:enumeration value="WEDNESDAY"/>
+                    <xs:enumeration value="THURSDAY"/>
+                    <xs:enumeration value="FRIDAY"/>
+                    <xs:enumeration value="SATURDAY"/>
+                    <xs:enumeration value="SUNDAY"/>
+                </xs:restriction>
+            </xs:simpleType>
+            <xs:simpleType name="java.time.Month">
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="JANUARY"/>
+                    <xs:enumeration value="FEBRUARY"/>
+                    <xs:enumeration value="MARCH"/>
+                    <xs:enumeration value="APRIL"/>
+                    <xs:enumeration value="MAY"/>
+                    <xs:enumeration value="JUNE"/>
+                    <xs:enumeration value="JULY"/>
+                    <xs:enumeration value="AUGUST"/>
+                    <xs:enumeration value="SEPTEMBER"/>
+                    <xs:enumeration value="OCTOBER"/>
+                    <xs:enumeration value="NOVEMBER"/>
+                    <xs:enumeration value="DECEMBER"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:schema>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://time.java/xsd">
+            <xs:complexType name="LocalDateTime">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="dayOfMonth" type="xs:int"/>
+                    <xs:element minOccurs="0" name="dayOfWeek" nillable="true" type="ax23:java.time.DayOfWeek"/>
+                    <xs:element minOccurs="0" name="dayOfYear" type="xs:int"/>
+                    <xs:element minOccurs="0" name="hour" type="xs:int"/>
+                    <xs:element minOccurs="0" name="minute" type="xs:int"/>
+                    <xs:element minOccurs="0" name="month" nillable="true" type="ax23:java.time.Month"/>
+                    <xs:element minOccurs="0" name="monthValue" type="xs:int"/>
+                    <xs:element minOccurs="0" name="nano" type="xs:int"/>
+                    <xs:element minOccurs="0" name="second" type="xs:int"/>
+                    <xs:element minOccurs="0" name="year" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+        <xs:schema xmlns:ax24="http://ws.apache.org/namespaces/axis2/enum" xmlns:ax26="http://beans.messager.polytech.fr/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://services.axis2.server.messager.polytech.fr">
+            <xs:import namespace="http://ws.apache.org/namespaces/axis2/enum"/>
+            <xs:import namespace="http://beans.messager.polytech.fr/xsd"/>
+            <xs:element name="getMessageBy">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="userId" type="xs:long"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getMessageByResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax26:Message"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllMessage">
+                <xs:complexType>
+                    <xs:sequence/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="getAllMessageResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element maxOccurs="unbounded" minOccurs="0" name="return" nillable="true" type="ax26:Message"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="deleteMessage">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="messageId" type="xs:long"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="createMessage">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="message" nillable="true" type="xs:string"/>
+                        <xs:element name="userId" type="xs:long"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+        <xs:schema xmlns:ax25="http://time.java/xsd" attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://beans.messager.polytech.fr/xsd">
+            <xs:import namespace="http://time.java/xsd"/>
+            <xs:import namespace="http://time.java/xsd"/>
+            <xs:complexType name="Message">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="author" nillable="true" type="ax21:User"/>
+                    <xs:element minOccurs="0" name="content" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+                    <xs:element minOccurs="0" name="postedTime" nillable="true" type="ax25:LocalDateTime"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType name="User">
+                <xs:sequence>
+                    <xs:element minOccurs="0" name="id" nillable="true" type="xs:long"/>
+                    <xs:element minOccurs="0" name="password" nillable="true" type="xs:string"/>
+                    <xs:element minOccurs="0" name="username" nillable="true" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="getMessageByRequest">
+        <wsdl:part name="parameters" element="ns:getMessageBy"/>
+    </wsdl:message>
+    <wsdl:message name="getMessageByResponse">
+        <wsdl:part name="parameters" element="ns:getMessageByResponse"/>
+    </wsdl:message>
+    <wsdl:message name="getAllMessageRequest">
+        <wsdl:part name="parameters" element="ns:getAllMessage"/>
+    </wsdl:message>
+    <wsdl:message name="getAllMessageResponse">
+        <wsdl:part name="parameters" element="ns:getAllMessageResponse"/>
+    </wsdl:message>
+    <wsdl:message name="createMessageRequest">
+        <wsdl:part name="parameters" element="ns:createMessage"/>
+    </wsdl:message>
+    <wsdl:message name="createMessageResponse"/>
+    <wsdl:message name="deleteMessageRequest">
+        <wsdl:part name="parameters" element="ns:deleteMessage"/>
+    </wsdl:message>
+    <wsdl:message name="deleteMessageResponse"/>
+    <wsdl:portType name="MessageServicePortType">
+        <wsdl:operation name="getMessageBy">
+            <wsdl:input message="ns:getMessageByRequest" wsaw:Action="urn:getMessageBy"/>
+            <wsdl:output message="ns:getMessageByResponse" wsaw:Action="urn:getMessageByResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="getAllMessage">
+            <wsdl:input message="ns:getAllMessageRequest" wsaw:Action="urn:getAllMessage"/>
+            <wsdl:output message="ns:getAllMessageResponse" wsaw:Action="urn:getAllMessageResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="createMessage">
+            <wsdl:input message="ns:createMessageRequest" wsaw:Action="urn:createMessage"/>
+            <wsdl:output message="ns:createMessageResponse" wsaw:Action="urn:createMessageResponse"/>
+        </wsdl:operation>
+        <wsdl:operation name="deleteMessage">
+            <wsdl:input message="ns:deleteMessageRequest" wsaw:Action="urn:deleteMessage"/>
+            <wsdl:output message="ns:deleteMessageResponse" wsaw:Action="urn:deleteMessageResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="MessageServiceSoap11Binding" type="ns:MessageServicePortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getMessageBy">
+            <soap:operation soapAction="urn:getMessageBy" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllMessage">
+            <soap:operation soapAction="urn:getAllMessage" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createMessage">
+            <soap:operation soapAction="urn:createMessage" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteMessage">
+            <soap:operation soapAction="urn:deleteMessage" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="MessageServiceSoap12Binding" type="ns:MessageServicePortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="getMessageBy">
+            <soap12:operation soapAction="urn:getMessageBy" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllMessage">
+            <soap12:operation soapAction="urn:getAllMessage" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createMessage">
+            <soap12:operation soapAction="urn:createMessage" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteMessage">
+            <soap12:operation soapAction="urn:deleteMessage" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="MessageServiceHttpBinding" type="ns:MessageServicePortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="getMessageBy">
+            <http:operation location="getMessageBy"/>
+            <wsdl:input>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="getAllMessage">
+            <http:operation location="getAllMessage"/>
+            <wsdl:input>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="createMessage">
+            <http:operation location="createMessage"/>
+            <wsdl:input>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="deleteMessage">
+            <http:operation location="deleteMessage"/>
+            <wsdl:input>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="application/xml" part="parameters"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="MessageService">
+        <wsdl:port name="MessageServiceHttpSoap11Endpoint" binding="ns:MessageServiceSoap11Binding">
+            <soap:address location="http://localhost:8080/Question3_war_exploded/services/MessageService.MessageServiceHttpSoap11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="MessageServiceHttpSoap12Endpoint" binding="ns:MessageServiceSoap12Binding">
+            <soap12:address location="http://localhost:8080/Question3_war_exploded/services/MessageService.MessageServiceHttpSoap12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="MessageServiceHttpEndpoint" binding="ns:MessageServiceHttpBinding">
+            <http:address location="http://localhost:8080/Question3_war_exploded/services/MessageService.MessageServiceHttpEndpoint/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>

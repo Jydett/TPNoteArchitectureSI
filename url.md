@@ -1,0 +1,1 @@
+http://localhost:8080/Question3_war_exploded/services/MessageService?wsdl
