@@ -1,11 +1,15 @@
 package fr.polytech.messager.client.gui.view;
 
 import fr.polytech.messager.client.gui.controller.MessagerController;
+import fr.polytech.messager.client.gui.model.Message;
 
 import javax.swing.*;
+import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Collections;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public class MessagerView extends View {
 
@@ -32,23 +36,47 @@ public class MessagerView extends View {
                 tableModel.getTableModel().addAll(allMessages);
             });
         }));
-        contentPane.addTab("Voir tous mes messages", messageTable(true, (a, tableModel) -> {
+        contentPane.addTab("Voir tous mes messages", messageTable(true, (a, table) -> {
             controller.getMyMessage(res -> {
-                tableModel.getTableModel().clear();
-                tableModel.getTableModel().addAll(res);
+                table.getTableModel().clear();
+                table.getTableModel().addAll(res);
             });
+        }, table -> {
+            JButton update = new JButton(new AbstractAction() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    JTable jTable = table.getTable();
+                    int selectedRow = jTable.getSelectedRow();
+                    if (selectedRow != -1) {
+                        Message toUpdate = table.getTableModel().getMessageAt(selectedRow);
+                        String updated = JOptionPane.showInputDialog(null, "Update", toUpdate.getContent());
+                        if (updated != null) {
+                            controller.saveMessage(toUpdate.getId(), updated, v -> {
+                                toUpdate.setContent(updated);
+                                table.getTableModel().fireTableRowsUpdated(selectedRow, selectedRow);
+                            });
+                        }
+                    }
+                }
+            });
+            update.setText("Update");
+            return Collections.singletonList(update);
         }));
         JTextField usernameField = new JTextField();
         usernameField.setColumns(30);
-        contentPane.addTab("Voir tous les messages d'un utilisateur", messageTable(false, (a, tableModel) -> {
+        contentPane.addTab("Voir tous les messages d'un utilisateur", messageTable(false, (a, table) -> {
             controller.getMessageFrom(usernameField.getText(), res -> {
-                tableModel.getTableModel().clear();
-                tableModel.getTableModel().addAll(res);
+                table.getTableModel().clear();
+                table.getTableModel().addAll(res);
             });
-        }, usernameField));
+        }, t -> Collections.singletonList(usernameField)));
     }
 
-    private JPanel messageTable(boolean isModifiable, BiConsumer<ActionEvent, MessageTable> onRefresh, Component... fields) {
+    private JPanel messageTable(boolean isModifiable, BiConsumer<ActionEvent, MessageTable> onRefresh) {
+        return messageTable(isModifiable, onRefresh, t -> Collections.emptyList());
+    }
+
+    private JPanel messageTable(boolean isModifiable, BiConsumer<ActionEvent, MessageTable> onRefresh, Function<MessageTable, List<Component>> fields) {
         JPanel allMessageTable = new JPanel();
         allMessageTable.setLayout(new BorderLayout(5, 5));
         allMessageTable.add(new MessageTable(controller, isModifiable, onRefresh, fields), BorderLayout.CENTER);

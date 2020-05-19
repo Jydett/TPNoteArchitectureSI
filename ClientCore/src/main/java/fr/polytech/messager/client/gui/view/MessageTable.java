@@ -7,21 +7,25 @@ import lombok.Getter;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 public class MessageTable extends JPanel {
 
     @Getter
     private final MessageTableModel tableModel;
+    @Getter
+    private final JTable table;
 
-    public MessageTable(MessagerController controller, boolean isModifiable, BiConsumer<ActionEvent, MessageTable> onRefresh, Component... fields) {
+    public MessageTable(MessagerController controller, boolean isModifiable, BiConsumer<ActionEvent, MessageTable> onRefresh, Function<MessageTable, List<Component>> fields) {
         tableModel = new MessageTableModel();
-        JTable table = new JTable(tableModel);
+        table = new JTable(tableModel);
         setLayout(new BorderLayout());
         add(new JScrollPane(table), BorderLayout.CENTER);
         JPanel buttons = new JPanel();
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        for (Component field : fields) {
+        for (Component field : fields.apply(this)) {
             buttons.add(field);
         }
         JButton refreshButton = new JButton(new AbstractAction() {
@@ -32,14 +36,13 @@ public class MessageTable extends JPanel {
         });
         refreshButton.setText("Refresh");
         buttons.add(refreshButton);
-        //TODO faire l'update
         if (isModifiable) {
             JButton deleteButton = new JButton(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                 int selectedRow = table.getSelectedRow();
                 if (selectedRow != -1) {
-                    controller.deleteMessage(tableModel.getMessageIdAt(selectedRow), v -> {
+                    controller.deleteMessage(tableModel.getMessageAt(selectedRow).getId(), v -> {
                         tableModel.removeMessage(selectedRow);
                     });
                 }

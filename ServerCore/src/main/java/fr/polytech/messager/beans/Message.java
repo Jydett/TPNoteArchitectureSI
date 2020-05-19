@@ -3,6 +3,7 @@ package fr.polytech.messager.beans;
 import fr.polytech.messager.doa.Identifiable;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -18,6 +19,7 @@ public class Message implements Identifiable<Long> {
     @Basic
     private LocalDateTime postedTime;
 
+    @Setter
     private String content;
 
     @ManyToOne

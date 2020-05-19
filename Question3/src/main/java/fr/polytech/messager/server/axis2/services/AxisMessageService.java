@@ -38,4 +38,9 @@ public class AxisMessageService extends MessageService {
     public void createMessage(String authToken, String message) throws Exception {
         super.createMessage(authToken, message);
     }
+
+    @WebMethod
+    public void updateMessage(String authToken, Long messageId, String content) throws Exception {
+        super.updateMessage(authToken, messageId, content);
+    }
 }

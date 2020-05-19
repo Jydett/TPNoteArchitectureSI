@@ -93,4 +93,15 @@ public class MessageClientAsyncWrapper {
             }
         });
     }
+
+    public void updateMessage(String authToken, Long id, String message, Consumer<Exception> exceptionHandler, Consumer<Void> callback) {
+        executorService.submit(() -> {
+            try {
+                toWrap.update(authToken, id, message);
+                SwingUtilities.invokeLater(() -> callback.accept(null));
+            } catch (Exception e) {
+                SwingUtilities.invokeLater(() -> exceptionHandler.accept(e));
+            }
+        });
+    }
 }

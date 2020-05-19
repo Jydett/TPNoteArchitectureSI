@@ -54,6 +54,18 @@ public abstract class MessageService {
         throw forbidden;
     }
 
+    protected void updateMessage(String authToken, Long messageId, String content) throws Exception {
+        User auth = auth(authToken);
+        Optional<Message> optionalMessage = messageDao.getById(messageId);
+        if (optionalMessage.isPresent()) {
+            Message message = optionalMessage.get();
+            if (message.getAuthor().getId().equals(auth.getId())) {
+                message.setContent(content);
+                messageDao.save(message);
+            }
+        }
+    }
+
     private User auth(String authToken) throws Exception {
         JwtUtils jwtUtils = JwtUtils.getInstance();
         if (jwtUtils.validateJwtToken(authToken)) {

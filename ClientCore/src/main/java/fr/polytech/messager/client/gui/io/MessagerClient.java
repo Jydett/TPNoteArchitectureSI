@@ -18,4 +18,6 @@ public interface MessagerClient {
     List<Message> getMessageFrom(String username) throws Exception;
 
     void delete(String authToken, Long messageId) throws Exception;
+
+    void update(String authToken, Long id, String content) throws Exception;
 }

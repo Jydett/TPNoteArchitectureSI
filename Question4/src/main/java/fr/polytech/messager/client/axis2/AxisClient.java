@@ -28,6 +28,15 @@ public class AxisClient implements MessagerClient {
     }
 
     @Override
+    public void update(String authToken, Long id, String content) throws Exception {
+        MessageServiceStub.UpdateMessage updateMessageRequest = new MessageServiceStub.UpdateMessage();
+        updateMessageRequest.setAuthToken(authToken);
+        updateMessageRequest.setMessageId(id);
+        updateMessageRequest.setContent(content);
+        messageServiceStub.updateMessage(updateMessageRequest);
+    }
+
+    @Override
     public void sendMessage(String authToken, String text) throws Exception {
         MessageServiceStub.CreateMessage createMessageRequest = new MessageServiceStub.CreateMessage();
         createMessageRequest.setAuthToken(authToken);

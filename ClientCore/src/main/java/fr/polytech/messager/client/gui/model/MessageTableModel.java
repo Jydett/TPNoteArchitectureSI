@@ -8,6 +8,7 @@ import java.util.List;
 
 public class MessageTableModel extends AbstractTableModel {
 
+    public static final int CONTENT_COLUMN = 1;
     private List<Message> messages = new ArrayList<>();
 
     private static final String[] HEADERS = {"Author", "Content"};
@@ -32,7 +33,7 @@ public class MessageTableModel extends AbstractTableModel {
         Message message = messages.get(rowIndex);
         switch (columnIndex) {
             case 0: return message.getAuthor();
-            case 1: return message.getContent();
+            case CONTENT_COLUMN: return message.getContent();
             case 2: return "X";
             default: return null;
         }
@@ -54,7 +55,11 @@ public class MessageTableModel extends AbstractTableModel {
         }
     }
 
-    public Long getMessageIdAt(int selectedRow) {
-        return messages.get(selectedRow).getId();
+    public Message getMessageAt(int selectedRow) {
+        return messages.get(selectedRow);
+    }
+
+    public String getContent(int selectedRow) {
+        return (String) getValueAt(selectedRow, CONTENT_COLUMN);
     }
 }

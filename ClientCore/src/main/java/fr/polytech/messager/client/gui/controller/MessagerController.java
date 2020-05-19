@@ -75,4 +75,15 @@ public class MessagerController extends Controller<MessagerView> {
             res.accept(cal);
         });
     }
+
+    public void saveMessage(Long messageId, String content, Consumer<Void> res) {
+        currentView.setLoading(true);
+        rooter.getMessagerClient().updateMessage(rooter.getAuthToken(), messageId, content, e -> {
+            currentView.showError("TODO", "Error");
+            currentView.setLoading(false);
+        }, cal -> {
+            currentView.setLoading(false);
+            res.accept(cal);
+        });
+    }
 }
