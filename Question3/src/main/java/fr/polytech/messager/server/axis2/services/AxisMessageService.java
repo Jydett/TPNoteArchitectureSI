@@ -25,12 +25,12 @@ public class AxisMessageService extends MessageService {
     }
 
     @WebMethod
-    public void deleteMessage(Long messageId) {
-        super.deleteMessage(messageId);
+    public void deleteMessage(String authToken, Long messageId) throws Exception {
+        super.deleteMessage(authToken, messageId);
     }
 
     @WebMethod
-    public void createMessage(String message, Long userId) {
-        super.createMessage(message, userId);
+    public void createMessage(String authToken, String message) throws Exception {
+        super.createMessage(authToken, message);
     }
 }

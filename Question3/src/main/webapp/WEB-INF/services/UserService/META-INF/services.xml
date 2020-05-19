@@ -3,7 +3,7 @@
 <serviceGroup>
 	<service name="UserService">
 		<parameter name="ServiceClass">fr.polytech.messager.server.axis2.services.AxisUserService</parameter>
-		<operation name="returnTrue">
+		<operation name="getAuthToken">
 			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 		</operation>
 	</service>
