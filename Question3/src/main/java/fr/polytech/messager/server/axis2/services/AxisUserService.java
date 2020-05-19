@@ -15,7 +15,7 @@ public class AxisUserService extends UserService {
 
     @Override
     @WebMethod
-    public String getAuthToken(String userName, String password) {
+    public String getAuthToken(String userName, String password) throws Exception {
         return super.getAuthToken(userName, password);
     }
 

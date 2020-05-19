@@ -39,9 +39,9 @@ public class MessageTable extends JPanel {
                 public void actionPerformed(ActionEvent e) {
                 int selectedRow = table.getSelectedRow();
                 if (selectedRow != -1) {
-                    if (controller.deleteMessage(tableModel.getMessageIdAt(selectedRow))) {
+                    controller.deleteMessage(tableModel.getMessageIdAt(selectedRow), v -> {
                         tableModel.removeMessage(selectedRow);
-                    }
+                    });
                 }
                 }
             });

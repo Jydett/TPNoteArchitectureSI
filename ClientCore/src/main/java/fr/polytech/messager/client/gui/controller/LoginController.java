@@ -8,30 +8,32 @@ public class LoginController extends Controller<LoginView> {
         setView(new LoginView(this));
     }
 
-    public void register(String email, String login, String psw) {
-        if ("".equals(login) || "".equals(psw) || "".equals(email)) {
+    public void register(String login, String psw) {
+        if ("".equals(login) || "".equals(psw)) {
             currentView.showError("Please fill every fields", "Error registering");
         } else {
             currentView.setLoading(true);
-            try {
-                rooter.getMessagerClient().register(login, psw);
+            rooter.getMessagerClient().register(login, psw, e ->
+                currentView.showError("A user with the same name already exist", "Error register")
+            , v -> {
                 authentificate(login, psw);
-            } catch (Exception e) {//TODO error
-                currentView.showError("A user with the same name already exist", "Error register");
-            }
-            currentView.setLoading(false);
+                currentView.setLoading(false);
+            });
         }
     }
 
     public void authentificate(String login, String psw) {
         currentView.setLoading(true);
-        try {
-            rooter.setAuthToken(rooter.getMessagerClient().getAuthToken(login, psw));
-            nextView();
-        } catch (Exception e) {//TODO error
-            currentView.showError(e.getMessage(), "Error register");
-        }
-        currentView.setLoading(false);
+        rooter.getMessagerClient().getAuthToken(login, psw, e -> {
+            currentView.showError(e.getMessage(), "Error auth");
+            currentView.setLoading(false);
+            },
+            res -> {
+                rooter.setAuthToken(res);
+                nextView();
+                currentView.setLoading(false);
+            }
+        );
     }
 
     private void nextView() {

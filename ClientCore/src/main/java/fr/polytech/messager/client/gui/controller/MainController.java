@@ -1,6 +1,7 @@
 package fr.polytech.messager.client.gui.controller;
 
 import com.formdev.flatlaf.intellijthemes.FlatCyanLightIJTheme;
+import fr.polytech.messager.client.gui.io.MessageClientAsyncWrapper;
 import fr.polytech.messager.client.gui.io.MessagerClient;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,14 +21,14 @@ public class MainController {
     }
 
     @Getter
-    private final MessagerClient messagerClient;
+    private final MessageClientAsyncWrapper messagerClient;
     private Controller currentController;
     @Getter @Setter
     private String authToken;
 
     public MainController(MessagerClient messagerClient) {
-//        FlatCyanLightIJTheme.install();
-        this.messagerClient = messagerClient;
+        FlatCyanLightIJTheme.install();
+        this.messagerClient = new MessageClientAsyncWrapper(messagerClient);
         currentController = new LoginController(this);
         currentController.showView();
     }

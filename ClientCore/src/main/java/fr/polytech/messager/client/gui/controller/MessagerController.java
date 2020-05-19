@@ -4,6 +4,7 @@ import fr.polytech.messager.client.gui.model.Message;
 import fr.polytech.messager.client.gui.view.MessagerView;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MessagerController extends Controller<MessagerView> {
     public MessagerController(MainController rooter) {
@@ -12,58 +13,66 @@ public class MessagerController extends Controller<MessagerView> {
     }
 
     public void sendMessage(String text) {
-        try {
-            rooter.getMessagerClient().sendMessage(rooter.getAuthToken(), text);
+        currentView.setLoading(true);
+        rooter.getMessagerClient().sendMessage(rooter.getAuthToken(), text, e -> {
+            e.printStackTrace();
+            currentView.showError("TODO", "Error");
+            currentView.setLoading(false);
+        }, v -> {
+            currentView.setLoading(false);
+            currentView.toast("Message envoyé !");
             currentView.clearMessageBox();
-        } catch (Exception e) {
-            //TODO
-            e.printStackTrace();
-            currentView.showError("TODO", "Error");
-        }
+        });
     }
 
-    public boolean deleteMessage(Long messageId) {
-        try {
-            rooter.getMessagerClient().delete(rooter.getAuthToken(), messageId);
-            return true;
-        } catch (Exception e) {
-            //TODO
+    public void deleteMessage(Long messageId, Consumer<Void> callback) {
+        currentView.setLoading(true);
+        rooter.getMessagerClient().delete(rooter.getAuthToken(), messageId, e -> {
             e.printStackTrace();
             currentView.showError("TODO", "Error");
-        }
-        return false;
+            currentView.setLoading(false);
+        }, cal -> {
+            currentView.setLoading(false);
+            callback.accept(cal);
+        });
     }
 
-    public List<Message> getAllMessages() {
-        try {
-            return rooter.getMessagerClient().getAllMessages();
-        } catch (Exception e) {
-            //TODO
+    public void getAllMessages(Consumer<List<Message>> res) {
+        currentView.setLoading(true);
+        rooter.getMessagerClient().getAllMessages(e -> {
             e.printStackTrace();
             currentView.showError("TODO", "Error");
-        }
-        return null;
+            currentView.setLoading(false);
+            res.accept(null);
+        }, cal -> {
+            currentView.setLoading(false);
+            res.accept(cal);
+        });
     }
 
-    public List<Message> getMyMessage() {
-        try {
-            return rooter.getMessagerClient().getMyMessage(rooter.getAuthToken());
-        } catch (Exception e) {
-            //TODO
+    public void getMyMessage(Consumer<List<Message>> res) {
+        currentView.setLoading(true);
+        rooter.getMessagerClient().getMyMessage(rooter.getAuthToken(), e -> {
             e.printStackTrace();
             currentView.showError("TODO", "Error");
-        }
-        return null;
+            currentView.setLoading(false);
+            res.accept(null);
+        }, cal -> {
+            currentView.setLoading(false);
+            res.accept(cal);
+        });
     }
 
-    public List<Message> getMessageFrom(String username) {
-        try {
-            return rooter.getMessagerClient().getMessageFrom(username);
-        } catch (Exception e) {
-            //TODO
+    public void getMessageFrom(String username, Consumer<List<Message>> res) {
+        currentView.setLoading(true);
+        rooter.getMessagerClient().getMessageFrom(username, e -> {
             e.printStackTrace();
             currentView.showError("TODO", "Error");
-        }
-        return null;
+            currentView.setLoading(false);
+            res.accept(null);
+        }, cal -> {
+            currentView.setLoading(false);
+            res.accept(cal);
+        });
     }
 }

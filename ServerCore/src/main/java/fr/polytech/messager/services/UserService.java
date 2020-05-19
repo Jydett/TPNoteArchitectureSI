@@ -5,6 +5,7 @@ import fr.polytech.messager.doa.user.UserDao;
 import fr.polytech.messager.utils.JwtUtils;
 import lombok.AllArgsConstructor;
 
+import javax.naming.AuthenticationException;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -12,11 +13,11 @@ public abstract class UserService {
 
     private UserDao userDao;
 
-    public String getAuthToken(String userName, String password) {
+    public String getAuthToken(String userName, String password) throws Exception {
         return userDao.authenficate(userName, password)
                 .map(user -> JwtUtils.getInstance()
                     .generateJwtToken(user.getUsername()))
-                .orElse(null);
+                .orElseThrow(AuthenticationException::new);
     }
 
     public void register(String userName, String password) {
