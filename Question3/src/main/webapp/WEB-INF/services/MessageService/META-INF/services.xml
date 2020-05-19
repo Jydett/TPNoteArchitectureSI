@@ -6,7 +6,10 @@
 		<operation name="getAllMessage">
 			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 		</operation>
-		<operation name="getMessageBy">
+		<operation name="getMyMessage">
+			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+		</operation>
+		<operation name="getMessageFrom">
 			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 		</operation>
 		<operation name="deleteMessage">

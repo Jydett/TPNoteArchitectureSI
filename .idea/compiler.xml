@@ -7,11 +7,12 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Question1" />
-        <module name="Core" />
+        <module name="ServerCore" />
         <module name="Question3" />
-        <module name="Question2" />
         <module name="Question4" />
+        <module name="ClientCore" />
+        <module name="Question2" />
+        <module name="Question1" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

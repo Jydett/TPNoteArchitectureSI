@@ -6,5 +6,8 @@
 		<operation name="getAuthToken">
 			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
 		</operation>
+		<operation name="register">
+			<messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+		</operation>
 	</service>
 </serviceGroup>

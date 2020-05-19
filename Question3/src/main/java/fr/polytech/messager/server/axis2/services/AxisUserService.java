@@ -18,4 +18,10 @@ public class AxisUserService extends UserService {
     public String getAuthToken(String userName, String password) {
         return super.getAuthToken(userName, password);
     }
+
+    @WebMethod
+    @Override
+    public void register(String userName, String password) {
+        super.register(userName, password);
+    }
 }

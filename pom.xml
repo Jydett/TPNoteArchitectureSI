@@ -13,7 +13,8 @@
         <module>Question2</module>
         <module>Question3</module>
         <module>Question4</module>
-        <module>Core</module>
+        <module>ServerCore</module>
+        <module>ClientCore</module>
     </modules>
 
     <build>

@@ -20,8 +20,13 @@ public class AxisMessageService extends MessageService {
     }
 
     @WebMethod
-    public List<Message> getMessageBy(Long userId) {
-        return super.getMessagesOf(userId);
+    public List<Message> getMessageFrom(String username) {
+        return super.getMessagesOf(username);
+    }
+
+    @WebMethod
+    public List<Message> getMyMessage(String authToken) throws Exception {
+        return super.getMyMessage(authToken);
     }
 
     @WebMethod
