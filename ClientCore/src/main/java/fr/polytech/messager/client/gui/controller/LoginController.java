@@ -23,21 +23,24 @@ public class LoginController extends Controller<LoginView> {
     }
 
     public void authentificate(String login, String psw) {
-        currentView.setLoading(true);
-        rooter.getMessagerClient().getAuthToken(login, psw, e -> {
-            currentView.showError(e.getMessage(), "Error auth");
-            currentView.setLoading(false);
-            },
-            res -> {
-                rooter.setAuthToken(res);
-                nextView();
-                currentView.setLoading(false);
-            }
-        );
+        if ("".equals(login) || "".equals(psw)) {
+            currentView.showError("Please fill every fields", "Error registering");
+        } else {
+            currentView.setLoading(true);
+            rooter.getMessagerClient().getAuthToken(login, psw, e -> {
+                    currentView.showError(e.getMessage(), "Error auth");
+                    currentView.setLoading(false);
+                },
+                res -> {
+                    rooter.setAuthToken(res);
+                    nextView(login);
+                    currentView.setLoading(false);
+                }
+            );
+        }
     }
 
-    private void nextView() {
-        rooter.changeController(new MessagerController(rooter));
+    private void nextView(String login) {
+        rooter.changeController(new MessagerController(rooter, login));
     }
-
 }

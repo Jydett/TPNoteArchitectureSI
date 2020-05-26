@@ -25,7 +25,7 @@ public abstract class MessageService {
         messageDao.save(new Message(LocalDateTime.now(), message, u));
     }
 
-    protected List<Message> getMessages() {
+    protected List<Message> getMessages() throws Exception {
         return messageDao.getAll();
     }
 
@@ -33,7 +33,7 @@ public abstract class MessageService {
         return getMessagesOf(JwtUtils.getInstance().getUserNameFromJwtToken(token));
     }
 
-    protected List<Message> getMessagesOf(String username) {
+    protected List<Message> getMessagesOf(String username) throws Exception {
         return userDao.getByUserName(username)
                 .map(user -> messageDao.getMessageOf(user.getId()))
                 .orElse(Collections.emptyList());

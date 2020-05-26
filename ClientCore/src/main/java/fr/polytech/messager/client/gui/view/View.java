@@ -1,9 +1,10 @@
 package fr.polytech.messager.client.gui.view;
 
 import fr.polytech.messager.client.gui.utils.Toast;
-
 import javax.swing.*;
 import java.awt.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public abstract class View {
 
@@ -34,5 +35,14 @@ public abstract class View {
 
     public void toast(String message) {
         Toast.showToast((JComponent) frame.getContentPane(), message);
+    }
+
+    protected java.util.List<Image> getIcons(String iconName) {
+        return Stream.of(16, 32, 64, 128)
+        .map(size -> String.format("/icon/%s_%d.png", iconName, size))
+        .map(p -> getClass().getResource(p))
+        .map(ImageIcon::new)
+        .map(ImageIcon::getImage)
+        .collect(Collectors.toList());
     }
 }

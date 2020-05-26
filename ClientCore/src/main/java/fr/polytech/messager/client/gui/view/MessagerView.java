@@ -3,40 +3,48 @@ package fr.polytech.messager.client.gui.view;
 import fr.polytech.messager.client.gui.controller.MessagerController;
 import fr.polytech.messager.client.gui.model.Message;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.util.Arrays;
 import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MessagerView extends View {
+
+    public static final String APP_TITLE = "Connecté à messager";
 
     private MessagerController controller;
     private JTextArea message;
     private JPanel messageBox;
+    private JTabbedPane tabbedPane;
 
     public MessagerView(MessagerController controller) {
-        super(new JFrame("Connecté à messager"));
+        super(new JFrame(APP_TITLE));
+        frame.setIconImages(getIcons("icon"));
         this.controller = controller;
         initialize();
     }
 
     private void initialize() {
-        JTabbedPane contentPane = new JTabbedPane();
-        frame.setContentPane(contentPane);
+        tabbedPane = new JTabbedPane();
+        frame.setContentPane(tabbedPane);
         frame.setMinimumSize(new Dimension(700, 550));
         initMessageBox();
 
-        contentPane.addTab("Envoyer un message", messageBox);
-        contentPane.addTab("Voir tous les messages", messageTable(false, (a, tableModel) -> {
+        tabbedPane.addTab("Envoyer un message", messageBox);
+        tabbedPane.addTab("Voir tous les messages", messageTable(false, (a, tableModel) -> {
             controller.getAllMessages(allMessages -> {
                 tableModel.getTableModel().clear();
                 tableModel.getTableModel().addAll(allMessages);
             });
         }));
-        contentPane.addTab("Voir tous mes messages", messageTable(true, (a, table) -> {
+        tabbedPane.addTab("Voir tous mes messages", messageTable(true, (a, table) -> {
             controller.getMyMessage(res -> {
                 table.getTableModel().clear();
                 table.getTableModel().addAll(res);
@@ -64,7 +72,7 @@ public class MessagerView extends View {
         }));
         JTextField usernameField = new JTextField();
         usernameField.setColumns(30);
-        contentPane.addTab("Voir tous les messages d'un utilisateur", messageTable(false, (a, table) -> {
+        tabbedPane.addTab("Voir tous les messages d'un utilisateur", messageTable(false, (a, table) -> {
             controller.getMessageFrom(usernameField.getText(), res -> {
                 table.getTableModel().clear();
                 table.getTableModel().addAll(res);
@@ -105,5 +113,18 @@ public class MessagerView extends View {
 
     public void clearMessageBox() {
         message.setText(null);
+    }
+
+    @Override
+    public void setLoading(boolean isLoading) {
+        if (isLoading) {
+            frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        } else {
+            frame.setCursor(Cursor.getDefaultCursor());
+        }
+    }
+
+    public void setConnectedAs(String login) {
+        frame.setTitle(APP_TITLE + " - " + login);
     }
 }

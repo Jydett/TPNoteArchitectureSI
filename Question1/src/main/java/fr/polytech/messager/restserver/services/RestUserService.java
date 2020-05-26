@@ -1,32 +1,43 @@
 package fr.polytech.messager.restserver.services;
 
 import fr.polytech.messager.doa.init.HibernateDaoInitializer;
-import fr.polytech.messager.doa.user.UserDao;
 import fr.polytech.messager.services.UserService;
 
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
+import static fr.polytech.messager.restserver.services.ResponseUtils.failureResponse;
+
+@Path("/UserService")
 public class RestUserService extends UserService {
     public RestUserService() {
         super(HibernateDaoInitializer.getUserDao());
     }
 
-    @POST
+    @GET
+    @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
     @Path("/login")
-    @Override
-    public String getAuthToken(String userName, String password) throws Exception {
-        return super.getAuthToken(userName, password);
+    public Response getAuthTokenEndpoint(@QueryParam("username") String userName, @QueryParam("password") String password) {
+        try {
+            String token = super.getAuthToken(userName, password);
+            return Response.ok().entity(token).build();
+        } catch (Exception e) {
+            return failureResponse(e);
+        }
     }
 
-    @POST
+    @GET
+    @Consumes(MediaType.APPLICATION_XML)
     @Produces(MediaType.APPLICATION_XML)
     @Path("/register")
-    @Override
-    public void register(String userName, String password) {
-        super.register(userName, password);
+    public Response registerEndpoint(@QueryParam("username") String userName, @QueryParam("password") String password) {
+        try {
+            super.register(userName, password);
+            return Response.ok().build();
+        } catch (Exception e) {
+            return failureResponse(e);
+        }
     }
 }

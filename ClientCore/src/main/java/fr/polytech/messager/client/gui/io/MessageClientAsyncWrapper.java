@@ -34,6 +34,7 @@ public class MessageClientAsyncWrapper {
                 final String authToken = toWrap.getAuthToken(login, psw);
                 SwingUtilities.invokeLater(() -> callback.accept(authToken));
             } catch (Exception e) {
+                e.printStackTrace();
                 SwingUtilities.invokeLater(() -> exceptionHandler.accept(e));
             }
         });
@@ -45,6 +46,7 @@ public class MessageClientAsyncWrapper {
                 toWrap.sendMessage(authToken, text);
                 SwingUtilities.invokeLater(() -> callback.accept(null));
             } catch (Exception e) {
+                e.printStackTrace();
                 SwingUtilities.invokeLater(() -> exceptionHandler.accept(e));
             }
         });
@@ -56,6 +58,7 @@ public class MessageClientAsyncWrapper {
                 final List<Message> allMessages = toWrap.getAllMessages();
                 SwingUtilities.invokeLater(() -> callback.accept(allMessages));
             } catch (Exception e) {
+                e.printStackTrace();
                 SwingUtilities.invokeLater(() -> exceptionHandler.accept(e));
             }
         });
@@ -67,6 +70,7 @@ public class MessageClientAsyncWrapper {
                 final List<Message> allMessages = toWrap.getMyMessage(authToken);
                 SwingUtilities.invokeLater(() -> callback.accept(allMessages));
             } catch (Exception e) {
+                e.printStackTrace();
                 SwingUtilities.invokeLater(() -> exceptionHandler.accept(e));
             }
         });
@@ -78,6 +82,7 @@ public class MessageClientAsyncWrapper {
                 final List<Message> allMessages = toWrap.getMessageFrom(username);
                 SwingUtilities.invokeLater(() -> callback.accept(allMessages));
             } catch (Exception e) {
+                e.printStackTrace();
                 SwingUtilities.invokeLater(() -> exceptionHandler.accept(e));
             }
         });
@@ -89,6 +94,7 @@ public class MessageClientAsyncWrapper {
                 toWrap.delete(authToken, messageId);
                 SwingUtilities.invokeLater(() -> callback.accept(null));
             } catch (Exception e) {
+                e.printStackTrace();
                 SwingUtilities.invokeLater(() -> exceptionHandler.accept(e));
             }
         });
@@ -100,6 +106,7 @@ public class MessageClientAsyncWrapper {
                 toWrap.update(authToken, id, message);
                 SwingUtilities.invokeLater(() -> callback.accept(null));
             } catch (Exception e) {
+                e.printStackTrace();
                 SwingUtilities.invokeLater(() -> exceptionHandler.accept(e));
             }
         });

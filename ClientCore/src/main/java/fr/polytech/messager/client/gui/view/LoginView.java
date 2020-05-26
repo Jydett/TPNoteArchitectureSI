@@ -19,7 +19,8 @@ public class LoginView extends View {
      * @param LoginController
      */
     public LoginView(LoginController LoginController) {
-        super(new JFrame());
+        super(new JFrame("Please login or register"));
+        frame.setIconImages(getIcons("icon"));
         this.controller = LoginController;
         initialize();
     }
@@ -28,11 +29,10 @@ public class LoginView extends View {
      * Initialize the contents of the frame.
      */
     private void initialize() {
-        frame.setTitle("Please login or register");
-        frame.setBounds(100, 100, 150, 164);
+        frame.setBounds(100, 100, 200, 164);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(new BoxLayout(frame.getContentPane(), BoxLayout.Y_AXIS));
-        frame.setMinimumSize(new Dimension(150, 220));
+        frame.setMinimumSize(new Dimension(200, 220));
 
         lblEnterYourId = new JLabel("Enter your ID :");
         frame.getContentPane().add(lblEnterYourId);

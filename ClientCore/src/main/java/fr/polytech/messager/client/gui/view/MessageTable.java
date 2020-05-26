@@ -41,11 +41,10 @@ public class MessageTable extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                 int selectedRow = table.getSelectedRow();
-                if (selectedRow != -1) {
-                    controller.deleteMessage(tableModel.getMessageAt(selectedRow).getId(), v -> {
-                        tableModel.removeMessage(selectedRow);
-                    });
-                }
+                    if (selectedRow != -1) {
+                        controller.deleteMessage(tableModel.getMessageAt(selectedRow).getId(),
+                                v -> tableModel.removeMessage(selectedRow));
+                    }
                 }
             });
             deleteButton.setText("Delete");
