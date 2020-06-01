@@ -9,16 +9,19 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class MessageTable extends JPanel {
+
+    interface FieldsProvider extends Function<MessageTable, List<Component>> {}
 
     @Getter
     private final MessageTableModel tableModel;
     @Getter
     private final JTable table;
 
-    public MessageTable(MessagerController controller, boolean isModifiable, BiConsumer<ActionEvent, MessageTable> onRefresh, Function<MessageTable, List<Component>> fields) {
+    public MessageTable(MessagerController controller, boolean isModifiable, Consumer<MessageTable> onRefresh, FieldsProvider fields) {
         tableModel = new MessageTableModel();
         table = new JTable(tableModel);
         setLayout(new BorderLayout());
@@ -31,7 +34,7 @@ public class MessageTable extends JPanel {
         JButton refreshButton = new JButton(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                onRefresh.accept(e, MessageTable.this);
+            onRefresh.accept(MessageTable.this);
             }
         });
         refreshButton.setText("Refresh");
@@ -41,10 +44,9 @@ public class MessageTable extends JPanel {
                 @Override
                 public void actionPerformed(ActionEvent e) {
                 int selectedRow = table.getSelectedRow();
-                    if (selectedRow != -1) {
-                        controller.deleteMessage(tableModel.getMessageAt(selectedRow).getId(),
-                                v -> tableModel.removeMessage(selectedRow));
-                    }
+                if (selectedRow != -1) {
+                    controller.deleteMessageAction(tableModel, tableModel.getMessageAt(selectedRow));
+                }
                 }
             });
             deleteButton.setText("Delete");

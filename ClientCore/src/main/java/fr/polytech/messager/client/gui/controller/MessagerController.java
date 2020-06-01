@@ -1,6 +1,8 @@
 package fr.polytech.messager.client.gui.controller;
 
 import fr.polytech.messager.client.gui.model.Message;
+import fr.polytech.messager.client.gui.model.MessageTableModel;
+import fr.polytech.messager.client.gui.view.MessageTable;
 import fr.polytech.messager.client.gui.view.MessagerView;
 
 import java.util.List;
@@ -30,7 +32,7 @@ public class MessagerController extends Controller<MessagerView> {
         });
     }
 
-    public void deleteMessage(Long messageId, Consumer<Void> callback) {
+    private void deleteMessage(Long messageId, Consumer<Void> callback) {
         currentView.setLoading(true);
         rooter.getMessagerClient().delete(rooter.getAuthToken(), messageId, e -> {
             e.printStackTrace();
@@ -42,7 +44,7 @@ public class MessagerController extends Controller<MessagerView> {
         });
     }
 
-    public void getAllMessages(Consumer<List<Message>> res) {
+    private void getAllMessages(Consumer<List<Message>> res) {
         currentView.setLoading(true);
         rooter.getMessagerClient().getAllMessages(e -> {
             e.printStackTrace();
@@ -55,7 +57,7 @@ public class MessagerController extends Controller<MessagerView> {
         });
     }
 
-    public void getMyMessage(Consumer<List<Message>> res) {
+    private void getMyMessage(Consumer<List<Message>> res) {
         currentView.setLoading(true);
         rooter.getMessagerClient().getMyMessage(rooter.getAuthToken(), e -> {
             e.printStackTrace();
@@ -68,7 +70,7 @@ public class MessagerController extends Controller<MessagerView> {
         });
     }
 
-    public void getMessageFrom(String username, Consumer<List<Message>> res) {
+    private void getMessageFrom(String username, Consumer<List<Message>> res) {
         currentView.setLoading(true);
         rooter.getMessagerClient().getMessageFrom(username, e -> {
             e.printStackTrace();
@@ -81,7 +83,7 @@ public class MessagerController extends Controller<MessagerView> {
         });
     }
 
-    public void saveMessage(Long messageId, String content, Consumer<Void> res) {
+    private void saveMessage(Long messageId, String content, Consumer<Void> res) {
         if (content.trim().isEmpty()) {
             currentView.showError("Votre message ne peux pas être vide", "Erreur");
             return;
@@ -94,5 +96,34 @@ public class MessagerController extends Controller<MessagerView> {
             currentView.setLoading(false);
             res.accept(cal);
         });
+    }
+
+    public void getAllMessagesAction(MessageTable messageTable) {
+        getAllMessages(allMessages -> fillModel(messageTable.getTableModel(), allMessages));
+    }
+
+    public void getMyMessageAction(MessageTable messageTable) {
+        getMyMessage(allMessages -> fillModel(messageTable.getTableModel(), allMessages));
+    }
+
+    public void getMessageFrom(MessageTable messageTable, String username) {
+        getMessageFrom(username, allMessages -> fillModel(messageTable.getTableModel(), allMessages));
+    }
+
+    public void saveMessageAction(MessageTableModel tableModel, Message toUpdate, String content) {
+        saveMessage(toUpdate.getId(), content, v -> {
+            toUpdate.setContent(content);
+            int rowIndex = tableModel.indexOf(toUpdate);
+            tableModel.fireTableRowsUpdated(rowIndex, rowIndex);
+        });
+    }
+
+    private void fillModel(MessageTableModel tableModel, List<Message> allMessages) {
+        tableModel.clear();
+        tableModel.addAll(allMessages);
+    }
+
+    public void deleteMessageAction(MessageTableModel tableModel, Message message) {
+        deleteMessage(message.getId(), v -> tableModel.removeMessage(tableModel.indexOf(message)));
     }
 }

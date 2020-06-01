@@ -3,17 +3,11 @@ package fr.polytech.messager.client.gui.view;
 import fr.polytech.messager.client.gui.controller.MessagerController;
 import fr.polytech.messager.client.gui.model.Message;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.util.Arrays;
-import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.function.Consumer;
 
 public class MessagerView extends View {
 
@@ -38,18 +32,8 @@ public class MessagerView extends View {
         initMessageBox();
 
         tabbedPane.addTab("Envoyer un message", messageBox);
-        tabbedPane.addTab("Voir tous les messages", messageTable(false, (a, tableModel) -> {
-            controller.getAllMessages(allMessages -> {
-                tableModel.getTableModel().clear();
-                tableModel.getTableModel().addAll(allMessages);
-            });
-        }));
-        tabbedPane.addTab("Voir tous mes messages", messageTable(true, (a, table) -> {
-            controller.getMyMessage(res -> {
-                table.getTableModel().clear();
-                table.getTableModel().addAll(res);
-            });
-        }, table -> {
+        tabbedPane.addTab("Voir tous les messages", messageTable(false, controller::getAllMessagesAction));
+        tabbedPane.addTab("Voir tous mes messages", messageTable(true, controller::getMyMessageAction, table -> {
             JButton update = new JButton(new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -59,10 +43,7 @@ public class MessagerView extends View {
                         Message toUpdate = table.getTableModel().getMessageAt(selectedRow);
                         String updated = JOptionPane.showInputDialog(null, "Update", toUpdate.getContent());
                         if (updated != null) {
-                            controller.saveMessage(toUpdate.getId(), updated, v -> {
-                                toUpdate.setContent(updated);
-                                table.getTableModel().fireTableRowsUpdated(selectedRow, selectedRow);
-                            });
+                            controller.saveMessageAction(table.getTableModel(), toUpdate, updated);
                         }
                     }
                 }
@@ -72,19 +53,15 @@ public class MessagerView extends View {
         }));
         JTextField usernameField = new JTextField();
         usernameField.setColumns(30);
-        tabbedPane.addTab("Voir tous les messages d'un utilisateur", messageTable(false, (a, table) -> {
-            controller.getMessageFrom(usernameField.getText(), res -> {
-                table.getTableModel().clear();
-                table.getTableModel().addAll(res);
-            });
-        }, t -> Collections.singletonList(usernameField)));
+        tabbedPane.addTab("Voir tous les messages d'un utilisateur", messageTable(false,
+                table -> controller.getMessageFrom(table, usernameField.getText()), t -> Collections.singletonList(usernameField)));
     }
 
-    private JPanel messageTable(boolean isModifiable, BiConsumer<ActionEvent, MessageTable> onRefresh) {
+    private JPanel messageTable(boolean isModifiable, Consumer<MessageTable> onRefresh) {
         return messageTable(isModifiable, onRefresh, t -> Collections.emptyList());
     }
 
-    private JPanel messageTable(boolean isModifiable, BiConsumer<ActionEvent, MessageTable> onRefresh, Function<MessageTable, List<Component>> fields) {
+    private JPanel messageTable(boolean isModifiable, Consumer<MessageTable> onRefresh, MessageTable.FieldsProvider fields) {
         JPanel allMessageTable = new JPanel();
         allMessageTable.setLayout(new BorderLayout(5, 5));
         allMessageTable.add(new MessageTable(controller, isModifiable, onRefresh, fields), BorderLayout.CENTER);

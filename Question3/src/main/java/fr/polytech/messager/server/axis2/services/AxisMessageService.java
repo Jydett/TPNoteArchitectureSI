@@ -15,12 +15,12 @@ public class AxisMessageService extends MessageService {
     }
 
     @WebMethod
-    public List<Message> getAllMessage() {
+    public List<Message> getAllMessage() throws Exception {
          return super.getMessages();
     }
 
     @WebMethod
-    public List<Message> getMessageFrom(String username) {
+    public List<Message> getMessageFrom(String username) throws Exception {
         return super.getMessagesOf(username);
     }
 

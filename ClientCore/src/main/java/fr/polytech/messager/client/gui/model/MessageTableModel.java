@@ -1,7 +1,5 @@
 package fr.polytech.messager.client.gui.model;
 
-import fr.polytech.messager.client.gui.model.Message;
-
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +55,10 @@ public class MessageTableModel extends AbstractTableModel {
 
     public Message getMessageAt(int selectedRow) {
         return messages.get(selectedRow);
+    }
+
+    public int indexOf(Message value) {
+        return messages.indexOf(value);
     }
 
     public String getContent(int selectedRow) {
