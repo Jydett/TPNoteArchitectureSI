@@ -32,11 +32,6 @@ public abstract class HibernateDao<Id extends Serializable, T extends Identifiab
         getSession();
     }
 
-    public boolean isEmpty() {
-        System.out.println("[DEBUG] isEmpty " + tableName);
-        return ((BigInteger) getSession().createSQLQuery("SELECT EXISTS (SELECT NULL FROM " + tableName + ")").uniqueResult()).intValue() == 0;
-    }
-
     public void save(T toSave) {
         Transaction transaction = getSession().beginTransaction();
         getSession().save(toSave);
@@ -55,16 +50,6 @@ public abstract class HibernateDao<Id extends Serializable, T extends Identifiab
 
     public List<T> getAll() {
         return getSession().createQuery("FROM " + className, clazz).list();
-    }
-
-    protected Page<T> getPage(String hqlQuery, int pageSize, int pageNumber) {
-        final Query<T> query = getSession().createQuery(hqlQuery, clazz);
-        query.setMaxResults(pageSize);
-        query.setFirstResult((pageNumber - 1) * pageSize);
-        final List<T> res = query.list();
-        Long totalResults = (Long) getSession().createQuery("select count (t.id) from " + className + " t").uniqueResult();
-        int numberOfPages = Double.valueOf(Math.ceil(((double)totalResults / (double) pageSize))).intValue();
-        return new PageImpl<>(res, pageSize, pageNumber, totalResults, numberOfPages);
     }
 
     public Session getSession() {

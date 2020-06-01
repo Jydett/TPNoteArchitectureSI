@@ -8,11 +8,11 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ServerCore" />
-        <module name="Question3" />
         <module name="Question4" />
-        <module name="ClientCore" />
+        <module name="Question3" />
         <module name="Question2" />
         <module name="Question1" />
+        <module name="ClientCore" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
